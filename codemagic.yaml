@@ -3,7 +3,7 @@ workflows:
     name: CLM/OCASS Build
     instance_type: mac_mini_m2
     environment:
-      flutter: latest
+      flutter: 3.24.0
       xcode: latest
       cocoapods: default
     scripts:
