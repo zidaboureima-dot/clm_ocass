@@ -6,11 +6,6 @@ workflows:
       flutter: latest
       xcode: latest
       cocoapods: default
-    triggering:
-      events:
-        - push
-      branches:
-        - main
     scripts:
       - name: Get dependencies
         script: flutter pub get
