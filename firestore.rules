@@ -1,0 +1,92 @@
+// firestore.rules
+// À déployer dans la console Firebase du projet Touma Nèda
+// via : firebase deploy --only firestore:rules
+//
+// Architecture de sécurité CLM/OCASS :
+//   - Toute personne peut CRÉER un signalement (formulaire public anonyme)
+//   - PERSONNE ne peut lire les signalements individuels sans être authentifié
+//   - Les administrateurs lisent et modifient tout
+//   - Les points focaux lisent uniquement les signalements de leur préfecture
+//   - Le tableau de bord public utilise des agrégats (Cloud Functions),
+//     jamais la collection raw directement
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -------------------------------------------------------
+    // Collection principale des signalements CLM
+    // -------------------------------------------------------
+    match /clm_signalements/{signalementId} {
+
+      // Création publique et anonyme :
+      // - aucune authentification requise
+      // - le document doit avoir le champ anonyme:true
+      // - les champs d'identification sont interdits
+      allow create: if
+        request.resource.data.anonyme == true &&
+        !('uid' in request.resource.data) &&
+        !('email' in request.resource.data) &&
+        !('telephone' in request.resource.data) &&
+        !('nom' in request.resource.data) &&
+        request.resource.data.description.size() >= 20 &&
+        request.resource.data.categorie_code is string &&
+        request.resource.data.prefecture is string;
+
+      // Lecture : administrateurs uniquement (rôle admin dans custom claims)
+      allow read: if isAdmin();
+
+      // Mise à jour du statut : admins et points focaux de la même préfecture
+      allow update: if isAdmin() ||
+        (isPointFocal() &&
+         resource.data.prefecture == request.auth.token.prefecture &&
+         onlyStatusUpdated());
+
+      // Suppression : admin uniquement (archivage)
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------
+    // Collection des agrégats publics (générée par Cloud Functions)
+    // Lecture publique, écriture Cloud Functions uniquement
+    // -------------------------------------------------------
+    match /clm_agregats/{docId} {
+      allow read: if true; // tableau de bord public
+      allow write: if false; // Cloud Functions uniquement via Admin SDK
+    }
+
+    // -------------------------------------------------------
+    // Collection des points focaux (gestion admin)
+    // -------------------------------------------------------
+    match /clm_points_focaux/{userId} {
+      allow read: if isAdmin() || request.auth.uid == userId;
+      allow write: if isAdmin();
+    }
+
+    // -------------------------------------------------------
+    // Fonctions utilitaires
+    // -------------------------------------------------------
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.role == 'admin';
+    }
+
+    function isPointFocal() {
+      return request.auth != null &&
+             request.auth.token.role == 'point_focal' &&
+             request.auth.token.prefecture is string;
+    }
+
+    function onlyStatusUpdated() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['statut', 'traite_le']);
+    }
+
+    // -------------------------------------------------------
+    // Bloquer toute autre collection non déclarée
+    // -------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

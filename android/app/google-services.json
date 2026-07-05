@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "818743820435",
+    "firebase_url": "https://sapsap-services-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sapsap-services",
+    "storage_bucket": "sapsap-services.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818743820435:android:388e46f5d67701db530d66",
+        "android_client_info": {
+          "package_name": "com.sapsap.services"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5g-PTwkrnlmN5lY3uHfFeGVD_P-BH13g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818743820435:android:6dd8b35545dc32d3530d66",
+        "android_client_info": {
+          "package_name": "com.sapservices.clm_ocass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5g-PTwkrnlmN5lY3uHfFeGVD_P-BH13g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
