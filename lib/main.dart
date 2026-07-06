@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'screens/connexion_screen.dart';
-import 'screens/confirmation_screen.dart';
-import 'screens/admin/admin_shell.dart';
-import 'screens/superviseur/superviseur_shell.dart';
-import 'screens/point_focal/point_focal_shell.dart';
 import 'screens/signalement_screen.dart';
 import 'screens/tableau_bord_public_screen.dart';
 import 'theme/app_theme.dart';
-import 'services/auth_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -143,7 +138,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     Icon(Icons.lock_outline, size: 20),
                     SizedBox(width: 12),
-                    Text("Acces admin / point focal"),
+                    Text("Acces admin / superviseur"),
                   ],
                 ),
               ),
