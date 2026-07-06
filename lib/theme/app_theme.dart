@@ -7,6 +7,11 @@ class AppColors {
   static const Color grisTexte = Color(0xFF6B7280);
   static const Color grisLeger = Color(0xFFF3F4F6);
   static const Color bordure = Color(0xFFE5E7EB);
+  
+  // Couleurs additionnelles
+  static const Color rouge = Color(0xFFDC2626);
+  static const Color ambre = Color(0xFFF59E0B);
+  static const Color bleu = Color(0xFF3B82F6);
 }
 
 class AppTheme {
