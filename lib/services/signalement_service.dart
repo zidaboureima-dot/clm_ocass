@@ -10,31 +10,23 @@ class SignalementService {
     return _instance;
   }
 
- Future<String> soumettre(Signalement signalement) async {
-  final Map<String, dynamic> donnees = {
-    'categorie_code': signalement.categorieCode,
-    'structure_sante': signalement.structureSante,
-    'prefecture': signalement.prefecture,
-    'region': signalement.region,
-    'commune': signalement.commune,
-    'urgence': signalement.urgence.name,
-    'description': signalement.description,
-    'date_approximative': signalement.dateApproximative,
-    'soumis_le': FieldValue.serverTimestamp(),
-    'statut': 'nouveau',
-    'anonyme': true,
-    'a_note_vocale': false,
-    'audio_path': null,
-    'consentement_vocal_le': null,
-  };
-
-  await FirebaseFirestore.instance
-      .collection('clm_signalements')
-      .doc(signalement.id)
-      .set(donnees);
-
-  return signalement.id;
-}
+  Future<String> soumettre(Signalement signalement) async {
+    final Map<String, dynamic> donnees = {
+      'categorie_code': signalement.categorieCode,
+      'structure_sante': signalement.structureSante,
+      'prefecture': signalement.prefecture,
+      'region': signalement.region,
+      'commune': signalement.commune,
+      'urgence': signalement.urgence.name,
+      'description': signalement.description,
+      'date_approximative': signalement.dateApproximative,
+      'soumis_le': FieldValue.serverTimestamp(),
+      'statut': 'nouveau',
+      'anonyme': true,
+      'a_note_vocale': false,
+      'audio_path': null,
+      'consentement_vocal_le': null,
+    };
 
     await FirebaseFirestore.instance
         .collection('clm_signalements')
@@ -66,15 +58,5 @@ class SignalementService {
         .count()
         .get();
     return snapshot.count ?? 0;
-  }
-
-  Future<void> mettreAJourStatut(String sigId, String nouveauStatut) async {
-    await FirebaseFirestore.instance
-        .collection('clm_signalements')
-        .doc(sigId)
-        .update({
-      'statut': nouveauStatut,
-      'change_statut_le': FieldValue.serverTimestamp(),
-    });
   }
 }
